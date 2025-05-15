@@ -1,12 +1,7 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Image,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import NavBar from '@components/Navbar';
 
 const announcements = [
   {
@@ -39,6 +34,7 @@ const AnnouncementsScreen = () => {
           </View>
         ))}
       </ScrollView>
+      <NavBar activeScreen="Announcements" />
     </SafeAreaView>
   );
 };
@@ -59,7 +55,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   scrollContainer: {
-    paddingBottom: 20,
+    paddingBottom: 70,
   },
   card: {
     backgroundColor: '#f4f6fb',

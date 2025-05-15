@@ -2,8 +2,11 @@ import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../App';
+
 const Navbar: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const route = useRoute();
 
   const isActive = (screenName: string) => route.name === screenName;
@@ -30,14 +33,14 @@ const Navbar: React.FC = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.navButton, isActive('Lost and Found') && styles.activeButton]}
-        onPress={() => navigation.navigate('Lost and Found')}>
+        style={[styles.navButton, isActive('LostAndFound') && styles.activeButton]}
+        onPress={() => navigation.navigate('LostAndFound')}>
         <Icon name="weather-umbrella" size={30} color="#fff" />
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={[styles.navButton, isActive('Document Requests') && styles.activeButton]}
-        onPress={() => navigation.navigate('Document Requests')}>
+        style={[styles.navButton, isActive('DocumentRequest') && styles.activeButton]}
+        onPress={() => navigation.navigate('DocumentRequest')}>
         <Icon name="file-document" size={30} color="#fff" /> 
       </TouchableOpacity>
     </View>
