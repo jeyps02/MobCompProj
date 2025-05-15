@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: '100%',
+    width: '50%',
     height: 120,
     marginBottom: 40,
     alignSelf: 'center',
@@ -88,8 +88,9 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
+    backgroundColor: '#F1F4FF',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#000',
     borderRadius: 8,
     paddingHorizontal: 16,
     marginBottom: 20,
@@ -99,18 +100,20 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
   },
   forgotPasswordText: {
-    color: '#007AFF',
+    color: '#000',
     fontSize: 14,
   },
   buttonContainer: {
     marginTop: 16,
   },
   loginButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#004AAD',
+    width: 200,
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
     marginBottom: 12,
   },
   buttonText: {
@@ -119,15 +122,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   registerButton: {
+    backgroundColor: '#FF9149',
+    width: 200,
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#007AFF',
+    alignSelf: 'center',
   },
   registerButtonText: {
-    color: '#007AFF',
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },
