@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
 
@@ -51,16 +51,18 @@ const styles = StyleSheet.create({
   navbar: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#6200EE',
+    backgroundColor: '#004AAD',
     paddingVertical: 10,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
   },
   navButton: {
     justifyContent: 'center',
     alignItems: 'center',
   },
   activeButton: {
-    backgroundColor: '#3700B3',
-    borderRadius: 5,
+    backgroundColor: '#2165C1',
+    borderRadius: 20,
     paddingHorizontal: 15,
   },
 });
