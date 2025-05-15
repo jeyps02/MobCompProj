@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
@@ -29,7 +30,15 @@ const Register = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Create your account</Text>
+        <View style={styles.headerContainer}>
+        <TouchableOpacity 
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
+          <Icon name="arrow-left" size={24} color="#000" />
+        </TouchableOpacity>
+        <Text style={styles.header}>Create your account</Text>
+      </View>
 
       <Text style={styles.label}>Full Name</Text>
       <TextInput
@@ -95,12 +104,23 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
+    justifyContent: 'center',
     backgroundColor: '#fff',
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 30,
+    marginTop: 10,
+    justifyContent: 'center',
+  },
+  backButton: {
+    position: 'absolute',
+    left: 20,
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 30,
     textAlign: 'center',
     color: '#333',
   },
@@ -112,20 +132,23 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 50,
+    backgroundColor: '#F1F4FF',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#000',
     borderRadius: 8,
-    paddingHorizontal: 15,
+    paddingHorizontal: 16,
     marginBottom: 20,
     fontSize: 16,
   },
   registerButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#004AAD',
+    width: 200,
     height: 50,
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    alignSelf: 'center',
+    marginTop: 20
   },
   buttonText: {
     color: '#fff',
