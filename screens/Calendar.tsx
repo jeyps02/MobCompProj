@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import NavBar from '@components/Navbar';
 
@@ -32,16 +32,86 @@ const Calendar = () => {
     },
   ];
 
-  // Calendar data for September 2021
-  const month = 'September 2021';
+  // Calendar state
+  const [currentDate, setCurrentDate] = useState(new Date(2021, 8, 19)); // Sept 19, 2021
+  const [selectedDate, setSelectedDate] = useState(new Date(2021, 8, 19));
+  
+  // Get filtered events for selected date
+  const filteredEvents = events.filter(event => {
+    // In a real app, you would parse the date string and compare
+    // For now, just check if it contains the day
+    return event.date.includes(`Sept ${selectedDate.getDate()}`);
+  });
+
+  // Get month display info
+  const getMonthData = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startOffset = firstDay.getDay(); // 0 = Sunday
+    
+    // Month name
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"];
+    
+    const monthDisplay = `${monthNames[month]} ${year}`;
+    
+    // Build calendar days
+    const days = [];
+    let week = Array(7).fill(null);
+    
+    // Fill in the offset
+    for (let i = 0; i < startOffset; i++) {
+      week[i] = null;
+    }
+    
+    // Fill in the days
+    for (let i = 1; i <= daysInMonth; i++) {
+      const dayIndex = (i - 1 + startOffset) % 7;
+      week[dayIndex] = i;
+      
+      if (dayIndex === 6 || i === daysInMonth) {
+        days.push([...week]);
+        week = Array(7).fill(null);
+      }
+    }
+
+    return {
+      monthDisplay,
+      days
+    };
+  };
+
+  const { monthDisplay, days } = getMonthData(currentDate);
   const weekDays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-  const days = [
-    [1, 2, 3, 4, 5, 6, 7],
-    [8, 9, 10, 11, 12, 13, 14],
-    [15, 16, 17, 18, 19, 20, 21],
-    [22, 23, 24, 25, 26, 27, 28],
-    [29, 30, 31, null, null, null, null],
-  ];
+
+  // Navigation handlers
+  const goToPrevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+  };
+  
+  const goToNextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+  };
+  
+  // Day selection handler
+  const handleDaySelect = (day: number | null) => {
+    if (day !== null) {
+      setSelectedDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
+    }
+  };
+  
+  // Check if a day is selected
+  const isSelectedDay = (day: number | null) => {
+    if (day === null) return false;
+    return (
+      selectedDate.getDate() === day &&
+      selectedDate.getMonth() === currentDate.getMonth() &&
+      selectedDate.getFullYear() === currentDate.getFullYear()
+    );
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -49,55 +119,70 @@ const Calendar = () => {
       <View style={styles.section}>
         <Text style={styles.header}>Barangay Calendar</Text>
         
-        <Text style={styles.monthHeader}>{month}</Text>
-        
-        {/* Weekday headers */}
-        <View style={styles.weekDaysContainer}>
-          {weekDays.map((day) => (
-            <Text key={day} style={styles.weekDay}>{day}</Text>
-          ))}
-        </View>
-        
-        {/* Calendar days */}
-        {days.map((week, weekIndex) => (
-          <View key={`week-${weekIndex}`} style={styles.weekRow}>
-            {week.map((day, dayIndex) => (
-              <TouchableOpacity 
-                key={`day-${weekIndex}-${dayIndex}`} 
-                style={[
-                  styles.dayCell, 
-                  day === 19 && styles.highlightedDay // Highlight Sept 19
-                ]}
-              >
-                <Text style={[
-                  styles.dayText,
-                  day === 19 && styles.highlightedDayText
-                ]}>
-                  {day || ''}
-                </Text>
-              </TouchableOpacity>
+        <View style={styles.calendarContainer}>
+          <View style={styles.monthNavigation}>
+            <TouchableOpacity onPress={goToPrevMonth}>
+              <Text style={styles.navigationArrow}>{'<'}</Text>
+            </TouchableOpacity>
+            <Text style={styles.monthHeader}>{monthDisplay}</Text>
+            <TouchableOpacity onPress={goToNextMonth}>
+              <Text style={styles.navigationArrow}>{'>'}</Text>
+            </TouchableOpacity>
+          </View>
+          
+          {/* Weekday headers */}
+          <View style={styles.weekDaysContainer}>
+            {weekDays.map((day) => (
+              <Text key={day} style={styles.weekDay}>{day}</Text>
             ))}
           </View>
-        ))}
+          
+          {/* Calendar days */}
+          {days.map((week, weekIndex) => (
+            <View key={`week-${weekIndex}`} style={styles.weekRow}>
+              {week.map((day, dayIndex) => (
+                <TouchableOpacity 
+                  key={`day-${weekIndex}-${dayIndex}`} 
+                  style={[
+                    styles.dayCell, 
+                    isSelectedDay(day) && styles.highlightedDay
+                  ]}
+                  onPress={() => handleDaySelect(day)}
+                  disabled={day === null}
+                >
+                  <Text style={[
+                    styles.dayText,
+                    isSelectedDay(day) && styles.highlightedDayText
+                  ]}>
+                    {day || ''}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          ))}
+        </View>
       </View>
 
       {/* Events Section */}
-      <View style={styles.section}>
-        {events.map((event) => (
-          <View key={event.id}>
-            <View style={styles.eventCard}>
-              <Text style={styles.eventTitle}>{event.title}</Text>
-              <Text style={styles.eventDescription}>{event.description}</Text>
-              <View style={styles.eventDetailRow}>
-                <Text style={styles.eventDetail}>{event.date} at {event.time}</Text>
+      <View style={styles.eventsSection}>
+        {filteredEvents.length > 0 ? (
+          filteredEvents.map((event) => (
+            <View key={event.id} style={styles.eventCardContainer}>
+              <View style={styles.eventCard}>
+                <Text style={styles.eventTitle}>{event.title}</Text>
+                <Text style={styles.eventDescription}>{event.description}</Text>
+                <View style={styles.eventDetailRow}>
+                  <Text style={styles.eventDetail}>{event.date} at {event.time}</Text>
+                </View>
+                <Text style={styles.eventLocation}>{event.location}</Text>
               </View>
-              <Text style={styles.eventLocation}>{event.location}</Text>
             </View>
-            {event.id !== events[events.length - 1].id && (
-              <View style={styles.divider} />
-            )}
+          ))
+        ) : (
+          <View style={styles.noEventsContainer}>
+            <Text style={styles.noEventsText}>No events for this day</Text>
           </View>
-        ))}
+        )}
       </View>
       <NavBar activeScreen="Calendar" />
     </ScrollView>
@@ -107,11 +192,16 @@ const Calendar = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5',
     padding: 16,
+    paddingBottom: 80,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 50, 
+  },
+  eventsSection: {
+    marginBottom: 115,
+    minHeight: 150, 
   },
   header: {
     fontSize: 24,
@@ -119,10 +209,32 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     color: '#333',
   },
+  calendarContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  monthNavigation: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  navigationArrow: {
+    fontSize: 18,
+    color: '#777',
+    paddingHorizontal: 10,
+  },
   monthHeader: {
     fontSize: 18,
     fontWeight: '600',
-    marginBottom: 12,
     color: '#444',
     textAlign: 'center',
   },
@@ -161,8 +273,20 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
+  eventCardContainer: {
+    marginBottom: 12,
+  },
   eventCard: {
-    paddingVertical: 12,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
   },
   eventTitle: {
     fontSize: 18,
@@ -188,11 +312,19 @@ const styles = StyleSheet.create({
     color: '#666',
     fontStyle: 'italic',
   },
-  divider: {
-    height: 1,
-    backgroundColor: '#e0e0e0',
-    marginVertical: 12,
+  noEventsContainer: {
+    padding: 20,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    minHeight: 100, // Add minimum height similar to event cards
   },
+  noEventsText: {
+    fontSize: 16,
+    color: '#666',
+  }
 });
 
 export default Calendar;
