@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
+import { supabase } from '@lib/supabase'; // Make sure you have this import
 
 const Register = () => {
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -15,10 +16,67 @@ const Register = () => {
     password: '',
     confirmPassword: ''
   });
+  const [loading, setLoading] = useState(false);
 
-  const handleRegister = () => {
-    // Logic
-    navigation.navigate('Login');
+  const handleRegister = async () => {
+    // 1. Validation
+    if (!formData.fullName || !formData.email || !formData.password) {
+      Alert.alert("Error", "Please fill in all required fields");
+      return;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      Alert.alert("Error", "Passwords don't match!");
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      Alert.alert("Error", "Password must be at least 6 characters");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // 2. Create user account
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (authError) throw authError;
+      if (!authData.user) throw new Error('No user returned after registration');
+
+      // 3. Save additional user info
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .insert({
+          id: authData.user.id,
+          full_name: formData.fullName,
+          email: formData.email,
+          contact_no: formData.contactNo,
+          address: formData.address,
+          created_at: new Date().toISOString()
+        });
+
+      if (profileError) throw profileError;
+
+      Alert.alert(
+        "Success!", 
+        "Account created! Please check your email to verify your account.",
+        [
+          { text: "OK", onPress: () => navigation.navigate('Login') }
+        ]
+      );
+    } catch (error: any) {
+      console.error('Registration error:', error);
+      Alert.alert(
+        "Registration Failed", 
+        error.message || "An error occurred during registration"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
@@ -30,7 +88,7 @@ const Register = () => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.headerContainer}>
+      <View style={styles.headerContainer}>
         <TouchableOpacity 
           onPress={() => navigation.goBack()}
           style={styles.backButton}
@@ -40,7 +98,7 @@ const Register = () => {
         <Text style={styles.header}>Create your account</Text>
       </View>
 
-      <Text style={styles.label}>Full Name</Text>
+      <Text style={styles.label}>Full Name *</Text>
       <TextInput
         style={styles.input}
         placeholder="Full Name"
@@ -48,7 +106,7 @@ const Register = () => {
         onChangeText={(text) => handleChange('fullName', text)}
       />
 
-      <Text style={styles.label}>Email</Text>
+      <Text style={styles.label}>Email *</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -75,16 +133,16 @@ const Register = () => {
         onChangeText={(text) => handleChange('address', text)}
       />
 
-      <Text style={styles.label}>Password</Text>
+      <Text style={styles.label}>Password *</Text>
       <TextInput
         style={styles.input}
-        placeholder="Password"
+        placeholder="Password (min 6 characters)"
         secureTextEntry
         value={formData.password}
         onChangeText={(text) => handleChange('password', text)}
       />
 
-      <Text style={styles.label}>Confirm Password</Text>
+      <Text style={styles.label}>Confirm Password *</Text>
       <TextInput
         style={styles.input}
         placeholder="Confirm Password"
@@ -93,8 +151,14 @@ const Register = () => {
         onChangeText={(text) => handleChange('confirmPassword', text)}
       />
 
-      <TouchableOpacity style={styles.registerButton} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Register</Text>
+      <TouchableOpacity 
+        style={[styles.registerButton, loading && styles.disabledButton]} 
+        onPress={handleRegister}
+        disabled={loading}
+      >
+        <Text style={styles.buttonText}>
+          {loading ? 'Creating Account...' : 'Register'}
+        </Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -149,6 +213,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     marginTop: 20
+  },
+  disabledButton: {
+    backgroundColor: '#7a9cc6',
   },
   buttonText: {
     color: '#fff',
