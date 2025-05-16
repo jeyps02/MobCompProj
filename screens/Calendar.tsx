@@ -12,7 +12,7 @@ type Event = {
 };
 
 const Calendar = () => {
-  // Sample data
+
   const events: Event[] = [
     {
       id: '1',
@@ -32,42 +32,34 @@ const Calendar = () => {
     },
   ];
 
-  // Calendar state
-  const [currentDate, setCurrentDate] = useState(new Date(2021, 8, 19)); // Sept 19, 2021
+  const [currentDate, setCurrentDate] = useState(new Date(2021, 8, 19));
   const [selectedDate, setSelectedDate] = useState(new Date(2021, 8, 19));
-  
-  // Get filtered events for selected date
+
   const filteredEvents = events.filter(event => {
-    // In a real app, you would parse the date string and compare
-    // For now, just check if it contains the day
+
     return event.date.includes(`Sept ${selectedDate.getDate()}`);
   });
 
-  // Get month display info
   const getMonthData = (date: Date) => {
     const year = date.getFullYear();
     const month = date.getMonth();
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startOffset = firstDay.getDay(); // 0 = Sunday
-    
-    // Month name
+    const startOffset = firstDay.getDay();
+
     const monthNames = ["January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"];
     
     const monthDisplay = `${monthNames[month]} ${year}`;
-    
-    // Build calendar days
+
     const days = [];
     let week = Array(7).fill(null);
-    
-    // Fill in the offset
+ 
     for (let i = 0; i < startOffset; i++) {
       week[i] = null;
     }
-    
-    // Fill in the days
+
     for (let i = 1; i <= daysInMonth; i++) {
       const dayIndex = (i - 1 + startOffset) % 7;
       week[dayIndex] = i;
@@ -87,7 +79,6 @@ const Calendar = () => {
   const { monthDisplay, days } = getMonthData(currentDate);
   const weekDays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
-  // Navigation handlers
   const goToPrevMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
   };
@@ -95,15 +86,13 @@ const Calendar = () => {
   const goToNextMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
   };
-  
-  // Day selection handler
+
   const handleDaySelect = (day: number | null) => {
     if (day !== null) {
       setSelectedDate(new Date(currentDate.getFullYear(), currentDate.getMonth(), day));
     }
   };
-  
-  // Check if a day is selected
+
   const isSelectedDay = (day: number | null) => {
     if (day === null) return false;
     return (
@@ -116,7 +105,7 @@ const Calendar = () => {
   return (
     <View style={styles.mainContainer}>
       <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentContainer}>
-        {/* Calendar Section */}
+
         <View style={styles.section}>
           <Text style={styles.header}>Barangay Calendar</Text>
           
@@ -130,15 +119,13 @@ const Calendar = () => {
                 <Text style={styles.navigationArrow}>{'>'}</Text>
               </TouchableOpacity>
             </View>
-            
-            {/* Weekday headers */}
+
             <View style={styles.weekDaysContainer}>
               {weekDays.map((day) => (
                 <Text key={day} style={styles.weekDay}>{day}</Text>
               ))}
             </View>
-            
-            {/* Calendar days */}
+
             {days.map((week, weekIndex) => (
               <View key={`week-${weekIndex}`} style={styles.weekRow}>
                 {week.map((day, dayIndex) => (
@@ -164,7 +151,6 @@ const Calendar = () => {
           </View>
         </View>
 
-        {/* Events Section */}
         <View style={styles.eventsSection}>
           {filteredEvents.length > 0 ? (
             filteredEvents.map((event) => (
@@ -186,8 +172,7 @@ const Calendar = () => {
           )}
         </View>
       </ScrollView>
-      
-      {/* NavBar outside of ScrollView to span full width */}
+
       <View style={styles.navbarWrapper}>
         <NavBar activeScreen="Calendar" />
       </View>
@@ -198,33 +183,33 @@ const Calendar = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
   },
   scrollContainer: {
     flex: 1,
   },
   contentContainer: {
     padding: 16,
-    paddingBottom: 100, // Extra padding at bottom for navbar
   },
   section: {
-    marginBottom: 30, // Reduced from 50
+    marginBottom: 30,
   },
   eventsSection: {
-    marginBottom: 40, // Reduced from 115
+    marginBottom: 40,
     minHeight: 150,
   },
   header: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 16,
-    color: '#333',
+    paddingTop: 30,
+    marginBottom: 20,
+    alignSelf: 'center'
   },
   calendarContainer: {
     backgroundColor: '#fff',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: '#000',
     padding: 12,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -288,10 +273,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   eventCard: {
-    backgroundColor: '#fff',
+    backgroundColor: '#F1F4FF',
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: '#000',
     padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -330,7 +315,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    minHeight: 100, // Add minimum height similar to event cards
+    minHeight: 100,
   },
   noEventsText: {
     fontSize: 16,
@@ -342,7 +327,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     width: '100%',
-    backgroundColor: '#0052cc', // Match your navbar background color
+    backgroundColor: '#0052cc', 
   }
 });
 

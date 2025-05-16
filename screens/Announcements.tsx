@@ -50,7 +50,7 @@ export default AnnouncementsScreen;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#1a1a1a',
+    backgroundColor: '#fff',
   },
   contentContainer: {
     flex: 1,
@@ -59,20 +59,21 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginVertical: 16,
-    color: '#fff',
+    paddingTop: 30,
+    marginBottom: 20,
+    color: '#000',
     textAlign: 'center',
   },
   scrollContainer: {
     paddingBottom: 70,
   },
   card: {
-    backgroundColor: '#f4f6fb',
+    backgroundColor: '#F1F4FF',
     padding: 12,
     marginBottom: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: '#000',
   },
   time: {
     fontSize: 12,
