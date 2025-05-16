@@ -116,8 +116,7 @@ const LostAndFoundScreen = () => {
           <View style={styles.bottomSpacer} />
         </ScrollView>
       </View>
-      
-      {/* FIXED NAVBAR: Moved outside all nested views with stronger styling */}
+
       <View style={styles.navbarContainer}>
         <NavBar activeScreen="LostAndFound" />
       </View>
@@ -128,28 +127,29 @@ const LostAndFoundScreen = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
   },
   contentContainer: {
     flex: 1,
     paddingHorizontal: 12,
     paddingTop: 12,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
+    paddingTop: 30,
     marginBottom: 12,
-    alignSelf: 'flex-start',
+    alignSelf: 'center',
   },
   tabsContainer: {
     flexDirection: 'row',
-    marginBottom: 12,
-    alignSelf: 'flex-start',
+    marginBottom: 15,
+    alignSelf: 'center',
   },
   tab: {
     paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingHorizontal: 15,
   },
   activeTab: {
     fontWeight: 'bold',
@@ -174,16 +174,17 @@ const styles = StyleSheet.create({
     width: '100%', 
   },
   scrollContent: {
-    paddingBottom: 120, // Match with bottomSpacer height
+    flexGrow: 1,
+    paddingBottom: 120, 
     alignItems: 'center',
   },
   itemCard: {
     marginBottom: 16,
-    backgroundColor: '#fff',
+    backgroundColor: '#F1F4FF',
     borderRadius: 8,
     padding: 12, 
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#000',
     width: '96%',
     maxWidth: 500, 
   },
@@ -201,6 +202,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#000',
     backgroundColor: '#e0e0e0',
     marginRight: 12,
   },
@@ -227,6 +230,8 @@ const styles = StyleSheet.create({
     height: 160, 
     backgroundColor: '#f0f0f0',
     borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#000',
     marginBottom: 12, 
   },
   buttonContainer: {
@@ -236,7 +241,7 @@ const styles = StyleSheet.create({
   contactButton: {
     paddingVertical: 6, 
     paddingHorizontal: 12, 
-    backgroundColor: '#3377ff',
+    backgroundColor: '#004AAD',
     borderRadius: 4,
     flex: 1,
     alignItems: 'center',
@@ -245,7 +250,7 @@ const styles = StyleSheet.create({
   reportButton: {
     paddingVertical: 6, 
     paddingHorizontal: 12, 
-    backgroundColor: '#3377ff',
+    backgroundColor: '#FF9149',
     borderRadius: 4,
     flex: 1,
     alignItems: 'center',
@@ -268,8 +273,8 @@ const styles = StyleSheet.create({
     height: 56,
     backgroundColor: '#0052cc',
     zIndex: 9999,
-    elevation: 8, // Android elevation
-    shadowColor: '#000', // iOS shadow
+    elevation: 8,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -277,7 +282,7 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(0,0,0,0.1)',
   },
   bottomSpacer: {
-    height: 120, // Much larger to ensure proper spacing
+    height: 120,
   },
   emptyScrollContent: {
     flex: 1,
