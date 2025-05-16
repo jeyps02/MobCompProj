@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Platform } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import NavBar from '@components/Navbar';
 
 type Item = {
@@ -22,7 +21,7 @@ const LostAndFoundScreen = () => {
       name: 'Kelly Jaudian',
       date: 'Apr 29, 2025',
       time: '11:21 AM',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     },
     {
       id: '2',
@@ -30,8 +29,8 @@ const LostAndFoundScreen = () => {
       name: 'Odella Abraham',
       date: 'Mar 02, 2025',
       time: '9:29 PM',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-    }
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    },
   ];
 
   const filteredItems = activeTab === 'all' 
@@ -41,85 +40,58 @@ const LostAndFoundScreen = () => {
   return (
     <View style={styles.mainContainer}>
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Lost and Found items</Text>
+        <Text style={styles.title}>Lost and Found Items</Text>
         
         <View style={styles.tabsContainer}>
-          <TouchableOpacity 
-            style={[styles.tab, activeTab === 'all' && styles.activeTab]}
-            onPress={() => setActiveTab('all')}
-          >
-            <Text style={[styles.tabText, activeTab === 'all' && styles.activeTabText]}>All</Text>
-          </TouchableOpacity>
-          
-          <View style={styles.tabDivider} />
-          
-          <TouchableOpacity 
-            style={[styles.tab, activeTab === 'found' && styles.activeTab]}
-            onPress={() => setActiveTab('found')}
-          >
-            <Text style={[styles.tabText, activeTab === 'found' && styles.activeTabText]}>Found</Text>
-          </TouchableOpacity>
-          
-          <View style={styles.tabDivider} />
-          
-          <TouchableOpacity 
-            style={[styles.tab, activeTab === 'lost' && styles.activeTab]}
-            onPress={() => setActiveTab('lost')}
-          >
-            <Text style={[styles.tabText, activeTab === 'lost' && styles.activeTabText]}>Lost</Text>
-          </TouchableOpacity>
+          {['all', 'found', 'lost'].map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              style={[styles.tab, activeTab === tab && styles.activeTab]}
+              onPress={() => setActiveTab(tab as 'all' | 'found' | 'lost')}
+            >
+              <Text style={[styles.tabText, activeTab === tab && styles.activeTabText]}>
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
         <ScrollView 
           style={styles.itemsContainer}
           contentContainerStyle={styles.scrollContent}
         >
-          {filteredItems.length > 0 ? (
-            filteredItems.map((item) => (
-              <View key={item.id} style={styles.itemCard}>
-                <Text style={styles.itemHeader}>
-                  {item.type === 'found' ? 'ITEM FOUND BY:' : 'ITEM LOST BY:'}
-                </Text>
-                
-                <View style={styles.userInfoContainer}>
-                  <View style={styles.avatarCircle} />
-                  <View style={styles.userInfo}>
-                    <Text style={styles.itemName}>{item.name}</Text>
-                    <Text style={styles.itemDateTime}>
-                      {item.time} | {item.date}
-                    </Text>
-                  </View>
-                </View>
-                
-                <Text style={styles.itemDescription}>{item.description}</Text>
-                
-                {}
-                <View style={styles.imagePlaceholder} />
-                
-                <View style={styles.buttonContainer}>
-                  <TouchableOpacity style={styles.contactButton}>
-                    <Text style={styles.contactButtonText}>Contact</Text>
-                  </TouchableOpacity>
-                  
-                  <TouchableOpacity style={styles.reportButton}>
-                    <Text style={styles.reportButtonText}>Report</Text>
-                  </TouchableOpacity>
+          {filteredItems.map((item) => (
+            <View key={item.id} style={styles.itemCard}>
+              <Text style={styles.itemHeader}>
+                {item.type === 'found' ? 'ITEM FOUND BY:' : 'ITEM LOST BY:'}
+              </Text>
+              <View style={styles.userInfoContainer}>
+                <View style={styles.avatarCircle} />
+                <View>
+                  <Text style={styles.itemName}>{item.name}</Text>
+                  <Text style={styles.itemDateTime}>
+                    {`${item.time} | ${item.date}`}
+                  </Text>
                 </View>
               </View>
-            ))
-          ) : (
-            <View style={styles.noItemsCard}>
-              <Text style={styles.noItemsText}>No items to display</Text>
+              <Text style={styles.itemDescription}>{item.description}</Text>
+              <View style={styles.imagePlaceholder}>
+                <Text style={styles.imagePlaceholderText}>Image Placeholder</Text>
+              </View>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.contactButton}>
+                  <Text style={styles.contactButtonText}>Contact</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.reportButton}>
+                  <Text style={styles.reportButtonText}>Report</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          )}
-          
-          <View style={styles.bottomSpacer} />
+          ))}
         </ScrollView>
       </View>
-
-      <View style={styles.navbarContainer}>
-        <NavBar activeScreen="LostAndFound" />
-      </View>
+      {/* NavBar is placed here to ensure it is always rendered */}
+      <NavBar activeScreen="LostAndFound" />
     </View>
   );
 };
@@ -133,26 +105,25 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 12,
     paddingTop: 12,
-    alignItems: 'center'
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    paddingTop: 30,
     marginBottom: 12,
-    alignSelf: 'center',
+    textAlign: 'center',
   },
   tabsContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
     marginBottom: 15,
-    alignSelf: 'center',
   },
   tab: {
     paddingVertical: 8,
     paddingHorizontal: 15,
   },
   activeTab: {
-    fontWeight: 'bold',
+    borderBottomWidth: 2,
+    borderBottomColor: '#000',
   },
   tabText: {
     fontSize: 16,
@@ -162,31 +133,19 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
   },
-  tabDivider: {
-    width: 1,
-    backgroundColor: '#ccc',
-    marginHorizontal: 8,
-    alignSelf: 'center',
-    height: '80%',
-  },
   itemsContainer: {
     flex: 1,
-    width: '100%', 
   },
   scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 120, 
-    alignItems: 'center',
+    paddingBottom: 120,
   },
   itemCard: {
     marginBottom: 16,
     backgroundColor: '#F1F4FF',
     borderRadius: 8,
-    padding: 12, 
+    padding: 12,
     borderWidth: 1,
-    borderColor: '#000',
-    width: '96%',
-    maxWidth: 500, 
+    borderColor: '#ddd',
   },
   itemHeader: {
     fontSize: 13,
@@ -202,13 +161,8 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#000',
     backgroundColor: '#e0e0e0',
     marginRight: 12,
-  },
-  userInfo: {
-    flex: 1,
   },
   itemName: {
     fontSize: 16,
@@ -217,30 +171,34 @@ const styles = StyleSheet.create({
   itemDateTime: {
     fontSize: 13,
     color: '#666',
-    marginTop: 2,
   },
   itemDescription: {
     fontSize: 14,
     color: '#333',
-    marginBottom: 16,
-    lineHeight: 20,
+    marginBottom: 12,
   },
   imagePlaceholder: {
     width: '100%',
-    height: 160, 
+    height: 160,
     backgroundColor: '#f0f0f0',
     borderRadius: 4,
     borderWidth: 1,
     borderColor: '#000',
-    marginBottom: 12, 
+    marginBottom: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  imagePlaceholderText: {
+    color: '#666',
+    fontStyle: 'italic',
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   contactButton: {
-    paddingVertical: 6, 
-    paddingHorizontal: 12, 
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     backgroundColor: '#004AAD',
     borderRadius: 4,
     flex: 1,
@@ -248,8 +206,8 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   reportButton: {
-    paddingVertical: 6, 
-    paddingHorizontal: 12, 
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     backgroundColor: '#FF9149',
     borderRadius: 4,
     flex: 1,
@@ -263,45 +221,6 @@ const styles = StyleSheet.create({
   reportButtonText: {
     color: '#fff',
     fontWeight: 'bold',
-  },
-  navbarContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    width: '100%',
-    height: 56,
-    backgroundColor: '#0052cc',
-    zIndex: 9999,
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.1)',
-  },
-  bottomSpacer: {
-    height: 120,
-  },
-  emptyScrollContent: {
-    flex: 1,
-    justifyContent: 'center',
-    minHeight: 300,
-  },
-  noItemsCard: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    width: '96%',
-    maxWidth: 500,
-    alignItems: 'center',
-  },
-  noItemsText: {
-    fontSize: 16,
-    color: '#666',
   },
 });
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import NavBar from '@components/Navbar';
 
 type Pet = {
@@ -15,6 +15,7 @@ const ProfileScreen = () => {
     name: 'Angelo Quirino Lahoz',
     contactNo: '09123456789',
     address: '938 Aurora Blvd, Cubao, Quezon City, 1109 Metro Manila',
+    profilePicture: 'https://via.placeholder.com/150', // Placeholder for profile picture
   };
 
   const pets: Pet[] = [
@@ -25,45 +26,52 @@ const ProfileScreen = () => {
       breed: 'Labrador Retriever',
       age: '3 months old',
     },
+    {
+      id: '2',
+      name: 'Mittens',
+      type: 'Cat',
+      breed: 'Persian',
+      age: '2 years old',
+    },
   ];
 
   return (
     <View style={styles.mainContainer}>
-      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentContainer}>
-        <View style={styles.section}>
-          <Text style={styles.header}>Profile</Text>
-          
-          <View style={styles.profileInfo}>
-            <Text style={styles.label}>Name:</Text>
-            <Text style={styles.value}>{user.name}</Text>
-            
-            <Text style={styles.label}>Contact no:</Text>
-            <Text style={styles.value}>{user.contactNo}</Text>
-            
-            <Text style={styles.label}>Address:</Text>
-            <Text style={styles.value}>{user.address}</Text>
-          </View>
-        </View>
+      {/* Screen Title */}
+      <View style={styles.screenTitleContainer}>
+        <Text style={styles.screenTitle}>Profile</Text>
+      </View>
 
+      {/* Header */}
+      <View style={styles.header}>
+        <Image source={{ uri: user.profilePicture }} style={styles.profilePicture} />
+        <Text style={styles.profileName}>{user.name}</Text>
+        <Text style={styles.profileContact}>{user.contactNo}</Text>
+        <Text style={styles.profileAddress}>{user.address}</Text>
+      </View>
+
+      {/* Main Content */}
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentContainer}>
+        {/* Pet Records Section */}
         <View style={styles.section}>
-          <Text style={styles.header}>PET RECORDS</Text>
-          
+          <Text style={styles.headerTitle}>Pet Records</Text>
+
           {pets.map((pet) => (
             <View key={pet.id} style={styles.petCard}>
               <Text style={styles.petName}>{pet.name}</Text>
-              <Text style={styles.petDetail}>{pet.type}</Text>
-              <Text style={styles.petDetail}>{pet.breed}</Text>
-              <Text style={styles.petDetail}>{pet.age}</Text>
+              <Text style={styles.petDetail}>{`Type: ${pet.type}`}</Text>
+              <Text style={styles.petDetail}>{`Breed: ${pet.breed}`}</Text>
+              <Text style={styles.petDetail}>{`Age: ${pet.age}`}</Text>
             </View>
           ))}
-          
+
           <TouchableOpacity style={styles.registerButton}>
-            <Text style={styles.registerButtonText}>Register Pet</Text>
+            <Text style={styles.registerButtonText}>+ Register New Pet</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
-      
-      {/* NavBar outside of ScrollView to span full width */}
+
+      {/* NavBar */}
       <View style={styles.navbarWrapper}>
         <NavBar activeScreen="Profile" />
       </View>
@@ -74,44 +82,79 @@ const ProfileScreen = () => {
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: '#f7f8fc',
+  },
+  screenTitleContainer: {
     backgroundColor: '#fff',
+    padding: 16,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  screenTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  header: {
+    paddingVertical: 20,
+    alignItems: 'center',
+    backgroundColor: '#fff', // White background
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    marginBottom: 16,
+  },
+  profilePicture: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 12,
+    borderWidth: 2,
+    borderColor: '#000',
+  },
+  profileName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 4,
+  },
+  profileContact: {
+    fontSize: 16,
+    color: '#000',
+    marginBottom: 4,
+  },
+  profileAddress: {
+    fontSize: 14,
+    color: '#000',
+    textAlign: 'center',
+    maxWidth: 250,
   },
   scrollContainer: {
     flex: 1,
   },
   contentContainer: {
     padding: 16,
-    paddingBottom: 80, // Extra padding to prevent content hiding behind navbar
+    paddingBottom: 80, // To prevent overlap with navbar
   },
   section: {
     marginBottom: 24,
   },
-  header: {
-    fontSize: 20,
+  headerTitle: {
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 16,
     color: '#333',
   },
-  profileInfo: {
-    backgroundColor: '#f8f8f8',
-    borderRadius: 8,
-    padding: 16,
-  },
-  label: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 4,
-  },
-  value: {
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 12,
-  },
   petCard: {
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#fff',
     borderRadius: 8,
     padding: 16,
     marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   petName: {
     fontSize: 18,
@@ -125,10 +168,13 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   registerButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FF9149', // Matches the register button color from the Login screen
+    width: 200, // Matches the width from the Login screen
+    height: 50, // Matches the height from the Login screen
     borderRadius: 8,
-    paddingVertical: 12,
+    justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
     marginTop: 8,
   },
   registerButtonText: {
@@ -142,8 +188,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     width: '100%',
-    backgroundColor: '#0052cc', // Match your navbar background color
-  }
+    backgroundColor: '#0052cc',
+  },
 });
 
 export default ProfileScreen;
