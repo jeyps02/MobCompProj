@@ -28,49 +28,60 @@ const ProfileScreen = () => {
   ];
 
   return (
-    <ScrollView style={styles.container}>
-
-      <View style={styles.section}>
-        <Text style={styles.header}>Profile</Text>
-        
-        <View style={styles.profileInfo}>
-          <Text style={styles.label}>Name:</Text>
-          <Text style={styles.value}>{user.name}</Text>
+    <View style={styles.mainContainer}>
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentContainer}>
+        <View style={styles.section}>
+          <Text style={styles.header}>Profile</Text>
           
-          <Text style={styles.label}>Contact no:</Text>
-          <Text style={styles.value}>{user.contactNo}</Text>
-          
-          <Text style={styles.label}>Address:</Text>
-          <Text style={styles.value}>{user.address}</Text>
-        </View>
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.header}>PET RECORDS</Text>
-        
-        {pets.map((pet) => (
-          <View key={pet.id} style={styles.petCard}>
-            <Text style={styles.petName}>{pet.name}</Text>
-            <Text style={styles.petDetail}>{pet.type}</Text>
-            <Text style={styles.petDetail}>{pet.breed}</Text>
-            <Text style={styles.petDetail}>{pet.age}</Text>
+          <View style={styles.profileInfo}>
+            <Text style={styles.label}>Name:</Text>
+            <Text style={styles.value}>{user.name}</Text>
+            
+            <Text style={styles.label}>Contact no:</Text>
+            <Text style={styles.value}>{user.contactNo}</Text>
+            
+            <Text style={styles.label}>Address:</Text>
+            <Text style={styles.value}>{user.address}</Text>
           </View>
-        ))}
-        
-        <TouchableOpacity style={styles.registerButton}>
-          <Text style={styles.registerButtonText}>Register Pet</Text>
-        </TouchableOpacity>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.header}>PET RECORDS</Text>
+          
+          {pets.map((pet) => (
+            <View key={pet.id} style={styles.petCard}>
+              <Text style={styles.petName}>{pet.name}</Text>
+              <Text style={styles.petDetail}>{pet.type}</Text>
+              <Text style={styles.petDetail}>{pet.breed}</Text>
+              <Text style={styles.petDetail}>{pet.age}</Text>
+            </View>
+          ))}
+          
+          <TouchableOpacity style={styles.registerButton}>
+            <Text style={styles.registerButtonText}>Register Pet</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+      
+      {/* NavBar outside of ScrollView to span full width */}
+      <View style={styles.navbarWrapper}>
+        <NavBar activeScreen="Profile" />
       </View>
-      <NavBar activeScreen="Profile" />
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  contentContainer: {
     padding: 16,
+    paddingBottom: 80, // Extra padding to prevent content hiding behind navbar
   },
   section: {
     marginBottom: 24,
@@ -125,6 +136,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  navbarWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: '100%',
+    backgroundColor: '#0052cc', // Match your navbar background color
+  }
 });
 
 export default ProfileScreen;

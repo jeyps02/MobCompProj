@@ -114,94 +114,105 @@ const Calendar = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Calendar Section */}
-      <View style={styles.section}>
-        <Text style={styles.header}>Barangay Calendar</Text>
-        
-        <View style={styles.calendarContainer}>
-          <View style={styles.monthNavigation}>
-            <TouchableOpacity onPress={goToPrevMonth}>
-              <Text style={styles.navigationArrow}>{'<'}</Text>
-            </TouchableOpacity>
-            <Text style={styles.monthHeader}>{monthDisplay}</Text>
-            <TouchableOpacity onPress={goToNextMonth}>
-              <Text style={styles.navigationArrow}>{'>'}</Text>
-            </TouchableOpacity>
-          </View>
+    <View style={styles.mainContainer}>
+      <ScrollView style={styles.scrollContainer} contentContainerStyle={styles.contentContainer}>
+        {/* Calendar Section */}
+        <View style={styles.section}>
+          <Text style={styles.header}>Barangay Calendar</Text>
           
-          {/* Weekday headers */}
-          <View style={styles.weekDaysContainer}>
-            {weekDays.map((day) => (
-              <Text key={day} style={styles.weekDay}>{day}</Text>
-            ))}
-          </View>
-          
-          {/* Calendar days */}
-          {days.map((week, weekIndex) => (
-            <View key={`week-${weekIndex}`} style={styles.weekRow}>
-              {week.map((day, dayIndex) => (
-                <TouchableOpacity 
-                  key={`day-${weekIndex}-${dayIndex}`} 
-                  style={[
-                    styles.dayCell, 
-                    isSelectedDay(day) && styles.highlightedDay
-                  ]}
-                  onPress={() => handleDaySelect(day)}
-                  disabled={day === null}
-                >
-                  <Text style={[
-                    styles.dayText,
-                    isSelectedDay(day) && styles.highlightedDayText
-                  ]}>
-                    {day || ''}
-                  </Text>
-                </TouchableOpacity>
+          <View style={styles.calendarContainer}>
+            <View style={styles.monthNavigation}>
+              <TouchableOpacity onPress={goToPrevMonth}>
+                <Text style={styles.navigationArrow}>{'<'}</Text>
+              </TouchableOpacity>
+              <Text style={styles.monthHeader}>{monthDisplay}</Text>
+              <TouchableOpacity onPress={goToNextMonth}>
+                <Text style={styles.navigationArrow}>{'>'}</Text>
+              </TouchableOpacity>
+            </View>
+            
+            {/* Weekday headers */}
+            <View style={styles.weekDaysContainer}>
+              {weekDays.map((day) => (
+                <Text key={day} style={styles.weekDay}>{day}</Text>
               ))}
             </View>
-          ))}
-        </View>
-      </View>
-
-      {/* Events Section */}
-      <View style={styles.eventsSection}>
-        {filteredEvents.length > 0 ? (
-          filteredEvents.map((event) => (
-            <View key={event.id} style={styles.eventCardContainer}>
-              <View style={styles.eventCard}>
-                <Text style={styles.eventTitle}>{event.title}</Text>
-                <Text style={styles.eventDescription}>{event.description}</Text>
-                <View style={styles.eventDetailRow}>
-                  <Text style={styles.eventDetail}>{event.date} at {event.time}</Text>
-                </View>
-                <Text style={styles.eventLocation}>{event.location}</Text>
+            
+            {/* Calendar days */}
+            {days.map((week, weekIndex) => (
+              <View key={`week-${weekIndex}`} style={styles.weekRow}>
+                {week.map((day, dayIndex) => (
+                  <TouchableOpacity 
+                    key={`day-${weekIndex}-${dayIndex}`} 
+                    style={[
+                      styles.dayCell, 
+                      isSelectedDay(day) && styles.highlightedDay
+                    ]}
+                    onPress={() => handleDaySelect(day)}
+                    disabled={day === null}
+                  >
+                    <Text style={[
+                      styles.dayText,
+                      isSelectedDay(day) && styles.highlightedDayText
+                    ]}>
+                      {day || ''}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
               </View>
-            </View>
-          ))
-        ) : (
-          <View style={styles.noEventsContainer}>
-            <Text style={styles.noEventsText}>No events for this day</Text>
+            ))}
           </View>
-        )}
+        </View>
+
+        {/* Events Section */}
+        <View style={styles.eventsSection}>
+          {filteredEvents.length > 0 ? (
+            filteredEvents.map((event) => (
+              <View key={event.id} style={styles.eventCardContainer}>
+                <View style={styles.eventCard}>
+                  <Text style={styles.eventTitle}>{event.title}</Text>
+                  <Text style={styles.eventDescription}>{event.description}</Text>
+                  <View style={styles.eventDetailRow}>
+                    <Text style={styles.eventDetail}>{event.date} at {event.time}</Text>
+                  </View>
+                  <Text style={styles.eventLocation}>{event.location}</Text>
+                </View>
+              </View>
+            ))
+          ) : (
+            <View style={styles.noEventsContainer}>
+              <Text style={styles.noEventsText}>No events for this day</Text>
+            </View>
+          )}
+        </View>
+      </ScrollView>
+      
+      {/* NavBar outside of ScrollView to span full width */}
+      <View style={styles.navbarWrapper}>
+        <NavBar activeScreen="Calendar" />
       </View>
-      <NavBar activeScreen="Calendar" />
-    </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  contentContainer: {
     padding: 16,
-    paddingBottom: 80,
+    paddingBottom: 100, // Extra padding at bottom for navbar
   },
   section: {
-    marginBottom: 50, 
+    marginBottom: 30, // Reduced from 50
   },
   eventsSection: {
-    marginBottom: 115,
-    minHeight: 150, 
+    marginBottom: 40, // Reduced from 115
+    minHeight: 150,
   },
   header: {
     fontSize: 24,
@@ -324,6 +335,14 @@ const styles = StyleSheet.create({
   noEventsText: {
     fontSize: 16,
     color: '#666',
+  },
+  navbarWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: '100%',
+    backgroundColor: '#0052cc', // Match your navbar background color
   }
 });
 

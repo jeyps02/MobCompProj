@@ -22,29 +22,38 @@ const announcements = [
 
 const AnnouncementsScreen = () => {
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Announcements</Text>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {announcements.map((item) => (
-          <View key={item.id} style={styles.card}>
-            <Text style={styles.time}>{item.time}</Text>
-            <Text style={styles.title}>{item.title}</Text>
-            <Text style={styles.message}>{item.message}</Text>
-            <View style={styles.imagePlaceholder} />
-          </View>
-        ))}
-      </ScrollView>
-      <NavBar activeScreen="Announcements" />
-    </SafeAreaView>
+    <View style={styles.mainContainer}>
+      <SafeAreaView style={styles.contentContainer}>
+        <Text style={styles.header}>Announcements</Text>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          {announcements.map((item) => (
+            <View key={item.id} style={styles.card}>
+              <Text style={styles.time}>{item.time}</Text>
+              <Text style={styles.title}>{item.title}</Text>
+              <Text style={styles.message}>{item.message}</Text>
+              <View style={styles.imagePlaceholder} />
+            </View>
+          ))}
+        </ScrollView>
+      </SafeAreaView>
+
+      {}
+      <View style={styles.navbarWrapper}>
+        <NavBar activeScreen="Announcements" />
+      </View>
+    </View>
   );
 };
 
 export default AnnouncementsScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
     backgroundColor: '#1a1a1a',
+  },
+  contentContainer: {
+    flex: 1,
     paddingHorizontal: 16,
   },
   header: {
@@ -84,5 +93,13 @@ const styles = StyleSheet.create({
     height: 100,
     backgroundColor: '#d3d3d3',
     borderRadius: 4,
+  },
+  navbarWrapper: {
+    width: '100%',
+    backgroundColor: '#0052cc',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });

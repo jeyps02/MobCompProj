@@ -61,53 +61,63 @@ const DocumentRequestsScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Document Requests</Text>
+    <View style={styles.mainContainer}>
+      <View style={styles.contentContainer}>
+        <Text style={styles.header}>Document Requests</Text>
+        
+        <ScrollView style={styles.requestsContainer}>
+          {requests.map((request) => (
+            <View key={request.id} style={styles.requestCard}>
+              <Text style={styles.requestId}>Request ID: {request.requestId}</Text>
+              <Text style={styles.documentType}>{request.documentType}</Text>
+              <Text style={styles.purpose}>{request.purpose}</Text>
+              
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>Date Requested:</Text>
+                <Text style={styles.detailValue}>{request.dateRequested}</Text>
+              </View>
+              
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>Fee:</Text>
+                <Text style={styles.detailValue}>{request.fee}</Text>
+              </View>
+              
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>Status:</Text>
+                <Text style={[styles.detailValue, { color: getStatusColor(request.status) }]}>
+                  {request.status}
+                </Text>
+              </View>
+              
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>Date Released:</Text>
+                <Text style={styles.detailValue}>{request.dateReleased}</Text>
+              </View>
+              
+              {request.id !== requests[requests.length - 1].id && (
+                <View style={styles.divider} />
+              )}
+            </View>
+          ))}
+          
+          <View style={styles.bottomSpacer} />
+        </ScrollView>
+      </View>
       
-      <ScrollView style={styles.requestsContainer}>
-        {requests.map((request) => (
-          <View key={request.id} style={styles.requestCard}>
-            <Text style={styles.requestId}>Request ID: {request.requestId}</Text>
-            <Text style={styles.documentType}>{request.documentType}</Text>
-            <Text style={styles.purpose}>{request.purpose}</Text>
-            
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Date Requested:</Text>
-              <Text style={styles.detailValue}>{request.dateRequested}</Text>
-            </View>
-            
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Fee:</Text>
-              <Text style={styles.detailValue}>{request.fee}</Text>
-            </View>
-            
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Status:</Text>
-              <Text style={[styles.detailValue, { color: getStatusColor(request.status) }]}>
-                {request.status}
-              </Text>
-            </View>
-            
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Date Released:</Text>
-              <Text style={styles.detailValue}>{request.dateReleased}</Text>
-            </View>
-            
-            {request.id !== requests[requests.length - 1].id && (
-              <View style={styles.divider} />
-            )}
-          </View>
-        ))}
-      </ScrollView>
-      <NavBar activeScreen="DocumentRequest" />
+      <View style={styles.navbarWrapper}>
+        <NavBar activeScreen="DocumentRequest" />
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  contentContainer: {
+    flex: 1,
     padding: 16,
   },
   header: {
@@ -157,6 +167,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#e0e0e0',
     marginTop: 16,
   },
+  navbarWrapper: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: '100%',
+    backgroundColor: '#0052cc',
+  },
+  bottomSpacer: {
+    height: 80,
+  }
 });
 
 export default DocumentRequestsScreen;
